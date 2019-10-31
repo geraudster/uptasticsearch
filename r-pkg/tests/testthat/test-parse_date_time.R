@@ -1,7 +1,7 @@
 # Configure logger (suppress all logs in testing)
 loggerOptions <- futile.logger::logger.options()
-if (!identical(loggerOptions, list())){
-    origLogThreshold <- loggerOptions[[1]][['threshold']]
+if (!identical(loggerOptions, list())) {
+    origLogThreshold <- loggerOptions[[1]][["threshold"]]
 } else {
     origLogThreshold <- futile.logger::INFO
 }
@@ -11,7 +11,7 @@ context("parse_date_time")
 
 
 # Correctly adjusts UTC date-times
-test_that("parse_date_time should transform the indicated date_cols to POSIXct with timezone UTC if they're given in UTC",{
+test_that("parse_date_time should transform the indicated date_cols to POSIXct with timezone UTC if they're given in UTC", {
     testDT <- data.table::data.table(
         id = c("a", "b", "c")
         , dateTime = c("2016-07-16T21:15:00Z", "2015-04-16T02:15:00Z", "2015-03-04T15:25:00Z")
@@ -24,7 +24,7 @@ test_that("parse_date_time should transform the indicated date_cols to POSIXct w
         , data.table::data.table(
             id = c("a", "b", "c")
             , dateTime = as.POSIXct(c("2016-07-16 21:15:00", "2015-04-16 02:15:00", "2015-03-04 15:25:00"), tz = "UTC")
-          )
+        )
     )
 })
 
@@ -42,12 +42,12 @@ test_that("parse_date_time should transform the indicated date_cols to POSIXct w
         , data.table::data.table(
             id = c("a", "b", "c")
             , dateTime = as.POSIXct(c("2016-07-16 21:15:00", "2015-04-16 01:15:00", "2015-03-04 13:25:00"), tz = "UTC")
-          )
+        )
     )
 })
 
 # Returns object of class POSIXct
-test_that("parse_date_time should transform the indicated date_cols to class POSIXct",{
+test_that("parse_date_time should transform the indicated date_cols to class POSIXct", {
     testDT <- data.table::data.table(
         id = c("a", "b", "c")
         , dateTime = c("2016-07-16T21:15:00Z", "2015-04-16T02:15:00Z", "2015-03-04T15:25:00Z")
@@ -60,7 +60,7 @@ test_that("parse_date_time should transform the indicated date_cols to class POS
         , data.table::data.table(
             id = c("a", "b", "c")
             , dateTime = as.POSIXct(c("2016-07-16 21:15:00", "2015-04-16 02:15:00", "2015-03-04 15:25:00"), tz = "UTC")
-          )
+        )
     )
 })
 
@@ -82,12 +82,12 @@ test_that("parse_date_time should perform adjustments only on the columns you as
             id = c("a", "b", "c")
             , dateTime = as.POSIXct(c("2016-07-16 21:15:00", "2015-04-16 02:15:00", "2015-03-04 15:25:00"), tz = "UTC")
             , otherDate = c("2014-03-11T12:15:00Z", "2015-04-16T02:15:00Z", "2015-03-04T15:25:00Z")
-          )
+        )
     )
 })
 
 # works for multiple date columns
-test_that("parse_date_time should perform adjustments for multiple data columns if asked",{
+test_that("parse_date_time should perform adjustments for multiple data columns if asked", {
     testDT <- data.table::data.table(
         id = c("a", "b", "c")
         , dateTime = c("2016-07-16T21:15:00Z", "2015-04-16T02:15:00Z", "2015-03-04T15:25:00Z")
@@ -104,7 +104,7 @@ test_that("parse_date_time should perform adjustments for multiple data columns 
             id = c("a", "b", "c")
             , dateTime = as.POSIXct(c("2016-07-16 21:15:00", "2015-04-16 02:15:00", "2015-03-04 15:25:00"), tz = "UTC")
             , otherDate = as.POSIXct(c("2014-03-11 12:15:00", "2015-04-16 02:15:00", "2015-03-04 15:25:00"), tz = "UTC")
-          )
+        )
     )
 })
 
@@ -115,9 +115,12 @@ test_that("parse_date_time should give an informative error if you pass non-char
         , dateTime = c("2016-07-16T21:15:00Z", "2015-04-16T02:15:00Z", "2015-03-04T15:25:00Z")
     )
 
-    expect_error({
-        parse_date_time(testDT, date_cols = list("dateTime"))
-    }, regexp = "The date_cols argument in parse_date_time expects a character vector")
+    expect_error(
+        {
+            parse_date_time(testDT, date_cols = list("dateTime"))
+        },
+        regexp = "The date_cols argument in parse_date_time expects a character vector"
+    )
 })
 
 # Gives informative error if inputDT is not a data.table
@@ -127,9 +130,12 @@ test_that("parse_date_time should give an informative error if you don't pass it
         , dateTime = c("2016-07-16T21:15:00Z", "2015-04-16T02:15:00Z", "2015-03-04T15:25:00Z")
     )
 
-    expect_error({
-        parse_date_time(testDF, date_cols = "dateTime")
-    }, regexp = "parse_date_time expects to receive a data\\.table object")
+    expect_error(
+        {
+            parse_date_time(testDF, date_cols = "dateTime")
+        },
+        regexp = "parse_date_time expects to receive a data\\.table object"
+    )
 })
 
 # Gives informative error if you ask to adjust date_cols that don't exist
@@ -139,9 +145,12 @@ test_that("parse_date_time should give an informative error if you give it dateC
         , dateTime = c("2016-07-16T21:15:00Z", "2015-04-16T02:15:00Z", "2015-03-04T15:25:00Z")
     )
 
-    expect_error({
-        parse_date_time(testDT, date_cols = c("dateTime", "dateTyme"))
-    }, regexp = "do not actually exist in input_df")
+    expect_error(
+        {
+            parse_date_time(testDT, date_cols = c("dateTime", "dateTyme"))
+        },
+        regexp = "do not actually exist in input_df"
+    )
 })
 
 # Does not have side effects (works on a copy)
@@ -162,7 +171,6 @@ test_that("parse_date_time should leave the original DT unchanged", {
 
 # Substitutes in assume_tz if missing a timezone
 test_that("parse_date_time should leave the original DT unchanged", {
-
     testDT <- data.table::data.table(
         id = c("a", "b", "c")
         , dateTime = c("2016-07-16T21:15:00", "2015-04-16T02:15:00Z", "2015-03-04T15:25:00Z")
@@ -171,7 +179,7 @@ test_that("parse_date_time should leave the original DT unchanged", {
     origAddress <- data.table::address(testDT)
     newDT <- parse_date_time(testDT, date_cols = "dateTime", assume_tz = "UTC")
 
-    expect_identical(newDT[id=="a", dateTime], as.POSIXct("2016-07-16 21:15:00", tz = "UTC"))
+    expect_identical(newDT[id == "a", dateTime], as.POSIXct("2016-07-16 21:15:00", tz = "UTC"))
 })
 
 ##### TEST TEAR DOWN #####

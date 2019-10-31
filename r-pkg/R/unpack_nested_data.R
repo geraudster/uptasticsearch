@@ -34,10 +34,12 @@
 #' # (Note: use es_search() to get here in one step)
 #'
 #' # Unpack by details.pastPurchases
-#' unpackedDT <- unpack_nested_data(chomped_df = sampleChompedDT
-#'                                  , col_to_unpack = "details.pastPurchases")
+#' unpackedDT <- unpack_nested_data(
+#'     chomped_df = sampleChompedDT
+#'     , col_to_unpack = "details.pastPurchases"
+#' )
 #' print(unpackedDT)
-unpack_nested_data <- function(chomped_df, col_to_unpack)  {
+unpack_nested_data <- function(chomped_df, col_to_unpack) {
 
     # Input checks
     if (!data.table::is.data.table(chomped_df)) {
