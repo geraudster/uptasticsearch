@@ -5,11 +5,14 @@ args <- commandArgs(
 )
 SOURCE_DIR <- args[[1]]
 
-excluded_files <- list.files(paste(SOURCE_DIR, "uptasticsearch.Rcheck", sep = "/")
-                             , pattern = rex::rex(".", one_of("Rr"), end)
-                             , all.files = TRUE
-                             , recursive = TRUE
-                             , full.names = TRUE)
+excluded_files <- list.files(
+    paste(SOURCE_DIR, "uptasticsearch.Rcheck", sep = "/")
+    ,
+    pattern = rex::rex(".", one_of("Rr"), end)
+    , all.files = TRUE
+    , recursive = TRUE
+    , full.names = TRUE
+)
 
 LINTERS_TO_USE <- list(
     "assignment" = lintr::assignment_linter
@@ -39,7 +42,8 @@ results <- lintr::lint_dir(
     path = SOURCE_DIR
     , linters = LINTERS_TO_USE
     , cache = FALSE
-    , exclusions = excluded_files)
+    , exclusions = excluded_files
+)
 
 results_df <- as.data.frame(results)
 
@@ -50,10 +54,10 @@ cat(sprintf(
 
 issues_found <- length(results)
 
-if (issues_found > 0){
+if (issues_found > 0) {
     print(addmargins(table(results_df[c("filename", "linter")])))
     cat("\n")
-    
+
     print(results)
 }
 
