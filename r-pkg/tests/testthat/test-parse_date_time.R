@@ -1,11 +1,11 @@
 # Configure logger (suppress all logs in testing)
 loggerOptions <- futile.logger::logger.options()
 if (!identical(loggerOptions, list())) {
-    origLogThreshold <- loggerOptions[[1]][["threshold"]]
+    origLogThreshold <- loggerOptions[[1L]][["threshold"]]
 } else {
     origLogThreshold <- futile.logger::INFO
 }
-futile.logger::flog.threshold(0)
+futile.logger::flog.threshold(0L)
 
 context("parse_date_time")
 
@@ -16,7 +16,7 @@ test_that("parse_date_time should transform the indicated date_cols to POSIXct w
         id = c("a", "b", "c")
         , dateTime = c("2016-07-16T21:15:00Z", "2015-04-16T02:15:00Z", "2015-03-04T15:25:00Z")
     )
-    newDT <- parse_date_time(testDT, date_cols = c("dateTime"))
+    newDT <- parse_date_time(testDT, date_cols = "dateTime")
 
     expect_true("POSIXct" %in% class(newDT$dateTime))
     expect_identical(
@@ -34,7 +34,7 @@ test_that("parse_date_time should transform the indicated date_cols to POSIXct w
         id = c("a", "b", "c")
         , dateTime = c("2016-07-16T21:15:00Z", "2015-04-16T02:15:00A", "2015-03-04T15:25:00B")
     )
-    newDT <- parse_date_time(testDT, date_cols = c("dateTime"))
+    newDT <- parse_date_time(testDT, date_cols = "dateTime")
 
     expect_true("POSIXct" %in% class(newDT$dateTime))
     expect_identical(
@@ -52,7 +52,7 @@ test_that("parse_date_time should transform the indicated date_cols to class POS
         id = c("a", "b", "c")
         , dateTime = c("2016-07-16T21:15:00Z", "2015-04-16T02:15:00Z", "2015-03-04T15:25:00Z")
     )
-    newDT <- parse_date_time(testDT, date_cols = c("dateTime"))
+    newDT <- parse_date_time(testDT, date_cols = "dateTime")
 
     expect_true("POSIXct" %in% class(newDT$dateTime))
     expect_identical(
@@ -71,7 +71,7 @@ test_that("parse_date_time should perform adjustments only on the columns you as
         , dateTime = c("2016-07-16T21:15:00Z", "2015-04-16T02:15:00Z", "2015-03-04T15:25:00Z")
         , otherDate = c("2014-03-11T12:15:00Z", "2015-04-16T02:15:00Z", "2015-03-04T15:25:00Z")
     )
-    newDT <- parse_date_time(testDT, date_cols = c("dateTime"))
+    newDT <- parse_date_time(testDT, date_cols = "dateTime")
 
     expect_true(all(c("dateTime", "otherDate") %in% names(newDT)))
     expect_true("POSIXct" %in% class(newDT$dateTime))

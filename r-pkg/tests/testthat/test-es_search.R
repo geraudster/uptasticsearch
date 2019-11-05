@@ -2,11 +2,11 @@
 # Configure logger (suppress all logs in testing)
 loggerOptions <- futile.logger::logger.options()
 if (!identical(loggerOptions, list())) {
-    origLogThreshold <- loggerOptions[[1]][["threshold"]]
+    origLogThreshold <- loggerOptions[[1L]][["threshold"]]
 } else {
     origLogThreshold <- futile.logger::INFO
 }
-futile.logger::flog.threshold(0)
+futile.logger::flog.threshold(0L)
 
 context("es_search")
 
@@ -60,39 +60,38 @@ test_that("es_search should reject malformed queries", {
 # .ConvertToSec should work for seconds
 test_that(
     ".ConvertToSec should work for seconds",
-    expect_identical(60, uptasticsearch:::.ConvertToSec("60s"))
+    expect_identical(60L, uptasticsearch:::.ConvertToSec("60s"))
 )
 
 # .ConverToSec should work for minutes
 test_that(
     ".ConvertToSec should work for minutes",
-    expect_identical(600, uptasticsearch:::.ConvertToSec("10m"))
+    expect_identical(600L, uptasticsearch:::.ConvertToSec("10m"))
 )
 
 # .ConvertToSec should work for hours
 test_that(
     ".ConvertToSec should work for hours",
-    expect_identical(72000, uptasticsearch:::.ConvertToSec("20h"))
+    expect_identical(72000L, uptasticsearch:::.ConvertToSec("20h"))
 )
 
 # .ConvertToSec should work for days
 test_that(
     ".ConvertToSec should work for days",
-    expect_identical(172800, uptasticsearch:::.ConvertToSec("2d"))
+    expect_identical(172800L, uptasticsearch:::.ConvertToSec("2d"))
 )
 
 # .ConvertToSec should work for weeks
 test_that(
     ".ConvertToSec should work for weeks",
-    expect_identical(3024000, uptasticsearch:::.ConvertToSec("5w"))
+    expect_identical(3024000L, uptasticsearch:::.ConvertToSec("5w"))
 )
 
 # .ConvertToSec should break on unsupported timeStrings
 test_that(
     ".ConvertToSec should work for seconds",
     expect_error(uptasticsearch:::.ConvertToSec("50Y")
-        ,
-        regexp = "Could not figure out units of datemath"
+                 , regexp = "Could not figure out units of datemath"
     )
 )
 
@@ -101,9 +100,8 @@ test_that(
 # .ValidateAndFormatHost should break if you give it a non-character input
 test_that(
     ".ValidateAndFormatHost should break if you give it a non-character input",
-    expect_error(uptasticsearch:::.ValidateAndFormatHost(9200)
-        ,
-        regexp = "es_host should be a string"
+    expect_error(uptasticsearch:::.ValidateAndFormatHost(9200L)
+                 , regexp = "es_host should be a string"
     )
 )
 
@@ -111,8 +109,7 @@ test_that(
 test_that(
     ".ValidateAndFormatHost should break if you give it a multi-element vector",
     expect_error(uptasticsearch:::.ValidateAndFormatHost(c("http://", "mydb.mycompany.com:9200"))
-        ,
-        regexp = "es_host should be length 1"
+                 , regexp = "es_host should be length 1"
     )
 )
 
@@ -131,8 +128,7 @@ test_that(".ValidateAndFormatHost should handle trailing slashes", {
 test_that(
     ".ValidateAndFormatHost should break if you don't have a port",
     expect_error(uptasticsearch:::.ValidateAndFormatHost("http://mydb.mycompany.com")
-        ,
-        regexp = "No port found in es_host"
+                 , regexp = "No port found in es_host"
     )
 )
 
@@ -143,8 +139,7 @@ test_that(".ValidateAndFormatHost should warn and use http if you don't give a p
         {
             hostWithTransfer <- uptasticsearch:::.ValidateAndFormatHost("mydb.mycompany.com:9200")
         }
-        ,
-        regexp = "You did not provide a transfer protocol"
+        , regexp = "You did not provide a transfer protocol"
     )
     expect_identical(hostWithTransfer, "http://mydb.mycompany.com:9200")
 })
@@ -153,10 +148,10 @@ test_that(".ValidateAndFormatHost should warn and use http if you don't give a p
 test_that(".major_version should correctly parse semver version strings", {
 
     # yay random tests
-    for (i in 1:50) {
-        v1 <- as.character(sample(0:9, size = 1))
-        v2 <- as.character(sample(0:9, size = 1))
-        v3 <- as.character(sample(0:9, size = 1))
+    for (i in 1L:50L) {
+        v1 <- as.character(sample(0L:9L, size = 1L))
+        v2 <- as.character(sample(0L:9L, size = 1L))
+        v3 <- as.character(sample(0L:9L, size = 1L))
         test_version <- paste0(v1, ".", v2, ".", v3)
         expect_identical(
             uptasticsearch:::.major_version(test_version)

@@ -3,11 +3,11 @@ context("get_fields")
 # Configure logger (suppress all logs in testing)
 loggerOptions <- futile.logger::logger.options()
 if (!identical(loggerOptions, list())) {
-    origLogThreshold <- loggerOptions[[1]][["threshold"]]
+    origLogThreshold <- loggerOptions[[1L]][["threshold"]]
 } else {
     origLogThreshold <- futile.logger::INFO
 }
-futile.logger::flog.threshold(0)
+futile.logger::flog.threshold(0L)
 
 
 #--- get_fields
@@ -58,8 +58,8 @@ test_that("get_fields works as expected when mocked", {
             )
             data.table::setkey(outDT, NULL)
             expected <- data.table::data.table(
-                index = c(rep("alias1", 3), rep("hotel", 5))
-                , type = c(rep("building", 3), rep("bed_room", 2), rep("conference_room", 3))
+                index = c(rep("alias1", 3L), rep("hotel", 5L))
+                , type = c(rep("building", 3L), rep("bed_room", 2L), rep("conference_room", 3L))
                 , field = c(
                     "id", "address", "address.keyword", "num_beds", "description"
                     , "num_people", "purpose", "purpose.keyword"
@@ -83,8 +83,8 @@ test_that(".flatten_mapping should work if the mapping for one index is provided
     mapping <- jsonlite::fromJSON(txt = test_json)
     mappingDT <- uptasticsearch:::.flatten_mapping(mapping = mapping)
     expected <- data.table::data.table(
-        index = rep("basketball", 5)
-        , type = rep("players", 5)
+        index = rep("basketball", 5L)
+        , type = rep("players", 5L)
         , field = c("team", "name.first", "name.last", "age", "position")
         , data_type = c("keyword", "text", "text", "integer", "keyword")
     )
@@ -97,8 +97,8 @@ test_that(".flatten_mapping should work if the mapping for multiple indices are 
     mapping <- jsonlite::fromJSON(txt = test_json)
     mappingDT <- uptasticsearch:::.flatten_mapping(mapping = mapping)
     expected <- data.table::data.table(
-        index = c(rep("company", 3), rep("hotel", 5))
-        , type = c(rep("building", 3), rep("bed_room", 2), rep("conference_room", 3))
+        index = c(rep("company", 3L), rep("hotel", 5L))
+        , type = c(rep("building", 3L), rep("bed_room", 2L), rep("conference_room", 3L))
         , field = c(
             "id", "address", "address.keyword", "num_beds", "description"
             , "num_people", "purpose", "purpose.keyword"

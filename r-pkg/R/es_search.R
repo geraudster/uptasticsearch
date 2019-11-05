@@ -80,11 +80,11 @@
 #' @references \href{https://www.elastic.co/guide/en/elasticsearch/reference/6.x/search-request-scroll.html}{ES 6 scrolling strategy}
 es_search <- function(es_host
                       , es_index
-                      , size = 10000
+                      , size = 10000L
                       , query_body = "{}"
                       , scroll = "5m"
                       , max_hits = Inf
-                      , n_cores = ceiling(parallel::detectCores() / 2)
+                      , n_cores = ceiling(parallel::detectCores() / 2L)
                       , break_on_duplicates = TRUE
                       , ignore_scroll_restriction = FALSE
                       , intermediates_dir = getwd()) {
@@ -114,7 +114,7 @@ es_search <- function(es_host
     if (is.na(n_cores) || !assertthat::is.count(n_cores)) {
         msg <- "detectCores() returned NA. Assigning number of cores to be 1."
         log_warn(msg)
-        n_cores <- 1
+        n_cores <- 1L
     }
 
     # Other input checks we don't have explicit error messages for
@@ -127,9 +127,9 @@ es_search <- function(es_host
         , query_body != ""
         , assertthat::is.string(scroll)
         , scroll != ""
-        , max_hits >= 0
+        , max_hits >= 0L
         , assertthat::is.count(n_cores)
-        , n_cores >= 1
+        , n_cores >= 1L
         , assertthat::is.flag(break_on_duplicates)
         , !is.na(break_on_duplicates)
         , assertthat::is.flag(ignore_scroll_restriction)
@@ -251,7 +251,7 @@ es_search <- function(es_host
     es_host <- .ValidateAndFormatHost(es_host)
 
     # Protect against costly scroll settings
-    if (.ConvertToSec(scroll) > 60 * 60 & !ignore_scroll_restriction) {
+    if (.ConvertToSec(scroll) > 60L * 60L & !ignore_scroll_restriction) {
         msg <- paste0(
             "By default, this function does not permit scroll requests ",
             "which keep the scroll context open for more than one hour.\n",
@@ -282,7 +282,7 @@ es_search <- function(es_host
     }
 
     # Warn if you are gonna give back a few more hits than max_hits
-    if (!is.infinite(max_hits) && max_hits %% size != 0) {
+    if (!is.infinite(max_hits) && max_hits %% size != 0L) {
         msg <- paste0(
             "When max_hits is not an exact multiple of size, it is ",
             "possible to get a few more than max_hits results back."
@@ -316,7 +316,7 @@ es_search <- function(es_host
     firstResult <- jsonlite::fromJSON(firstResultJSON, simplifyVector = FALSE)
 
     major_version <- .get_es_version(es_host)
-    if (as.integer(major_version) > 6) {
+    if (as.integer(major_version) > 6L) {
         hits_to_pull <- min(firstResult[["hits"]][["total"]][["value"]], max_hits)
     } else {
         hits_to_pull <- min(firstResult[["hits"]][["total"]], max_hits)
@@ -325,7 +325,7 @@ es_search <- function(es_host
     # If we got everything possible, just return here
     hits_pulled <- length(firstResult[["hits"]][["hits"]])
 
-    if (hits_pulled == 0) {
+    if (hits_pulled == 0L) {
         msg <- paste0(
             "Query is syntactically valid but 0 documents were matched. "
             , "Returning NULL"
@@ -384,7 +384,7 @@ es_search <- function(es_host
 
     # If the user requested 1 core, just run single-threaded.
     # Not worth the overhead of setting up the cluster.
-    if (n_cores == 1) {
+    if (n_cores == 1L) {
         outDT <- data.table::rbindlist(
             lapply(tempFiles
                 ,
@@ -526,7 +526,7 @@ es_search <- function(es_host
 
         # Break if we got nothing
         hitsInThisPage <- length(resultList[["hits"]][["hits"]])
-        if (hitsInThisPage == 0) {
+        if (hitsInThisPage == 0L) {
             break
         }
 
@@ -604,7 +604,7 @@ es_search <- function(es_host
     }
 
     # es_host is length 1
-    if (!length(es_host) == 1) {
+    if (!length(es_host) == 1L) {
         msg <- paste0(
             "es_host should be length 1."
             , " You provided an object of length "
@@ -622,7 +622,7 @@ es_search <- function(es_host
 
     # es_host has a port number
     portPattern <- ":[0-9]+$"
-    if (!grepl(portPattern, es_host) == 1) {
+    if (!grepl(portPattern, es_host) == 1L) {
         msg <- paste0(
             "No port found in es_host! es_host should be a string of the"
             , "form [transfer_protocol][hostname]:[port]). for "
@@ -633,7 +633,7 @@ es_search <- function(es_host
 
     # es_host has a valid transfer protocol
     protocolPattern <- "^[A-Za-z]+://"
-    if (!grepl(protocolPattern, es_host) == 1) {
+    if (!grepl(protocolPattern, es_host) == 1L) {
         msg <- paste0(
             "You did not provide a transfer protocol (e.g. http://) with es_host."
             , "Assuming http://..."
@@ -686,8 +686,8 @@ es_search <- function(es_host
 # [param] version_string A dot-delimited version string
 #' @importFrom stringr str_split
 .major_version <- function(version_string) {
-    components <- stringr::str_split(version_string, "\\.")[[1]]
-    return(components[1])
+    components <- stringr::str_split(version_string, "\\.")[[1L]]
+    return(components[1L])
 }
 
 
@@ -787,13 +787,13 @@ es_search <- function(es_host
         ,
         "s" = timeNum
         ,
-        "m" = timeNum * 60
+        "m" = timeNum * 60L
         ,
-        "h" = timeNum * 60 * 60
+        "h" = timeNum * 60L * 60L
         ,
-        "d" = timeNum * 60 * 60 * 24
+        "d" = timeNum * 60L * 60L * 24L
         ,
-        "w" = timeNum * 60 * 60 * 24 * 7
+        "w" = timeNum * 60L * 60L * 24L * 7L
         ,
         {
             msg <- paste0(

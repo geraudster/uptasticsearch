@@ -30,14 +30,14 @@ get_fields <- function(es_host
 
     .assert(
         is.character("es_indices")
-        , length(es_indices) > 0
+        , length(es_indices) > 0L
     )
 
     # collapse character vectors into comma separated strings. If any arguments
     # are NULL, create an empty string
     indices <- paste(es_indices, collapse = ",")
 
-    if (nchar(indices) == 0) {
+    if (nchar(indices) == 0L) {
         msg <- paste(
             "get_fields must be passed a valid es_indices."
             , "You provided", paste(es_indices, collapse = ", ")
@@ -51,7 +51,7 @@ get_fields <- function(es_host
     )
 
     # The use of "_all" to indicate "all indices" was removed in Elasticsearch 7.
-    if (as.integer(major_version) > 6 && indices == "_all") {
+    if (as.integer(major_version) > 6L && indices == "_all") {
         log_warn(sprintf(
             paste0(
                 "You are running Elasticsearch version '%s.x'. _all is not supported in this version."
@@ -68,7 +68,7 @@ get_fields <- function(es_host
                 ,
                 sep = "/"
             )
-            , times = 3
+            , times = 3L
         )
         indexDT <- data.table::as.data.table(
             jsonlite::fromJSON(
@@ -99,7 +99,7 @@ get_fields <- function(es_host
     resultContent <- httr::content(result, as = "parsed")
 
     ######################### flatten the result ##############################
-    if (as.integer(major_version) > 6) {
+    if (as.integer(major_version) > 6L) {
         # As of ES7, indices cannot contain multiple types so the concept of
         # a "type" in a mapping is irrelevant. Maintaining the field here
         # for backwards compatibility of this function.
@@ -180,7 +180,7 @@ get_fields <- function(es_host
     # the names of the flattened object has the index, type, and field name
     # however, it also has extra terms that we can use to split the name
     # into three distinct parts
-    mappingCols <- stringr::str_split_fixed(names(flattened), "\\.(mappings|properties)\\.", n = 3)
+    mappingCols <- stringr::str_split_fixed(names(flattened), "\\.(mappings|properties)\\.", n = 3L)
 
     # convert to data.table and add the data type column
     mappingDT <- data.table::data.table(
